@@ -1,0 +1,13 @@
+#Environment
+venv
+
+# mypy
+.mypy_cache/
+
+# Python
+*.py[cod] 
+*$py.class 
+
+# Visual Studio Code
+.vscode/* 
+
