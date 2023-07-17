@@ -1,5 +1,7 @@
 #Environment
+.env
 venv
+*.sqlite3
 
 # mypy
 .mypy_cache/

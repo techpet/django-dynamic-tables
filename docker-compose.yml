@@ -1,0 +1,23 @@
+version: '2'
+services:
+    postgres:
+        image: postgres:13.11-bullseye
+        env_file:
+            - .env
+        # ports:
+        #     - "${POSTGRES_PORT}:5432"
+        volumes:
+            - "./data:/var/lib/postgresql"
+        
+    app:
+        env_file:
+            - .env
+        build: .
+        command: >
+            sh -c "python manage.py runserver --insecure 0.0.0.0:8000"
+        volumes:
+        - "./src:/code"
+        ports:
+        - 8000:8000
+        depends_on:
+        - postgres

@@ -1,22 +1,43 @@
-"""
-URL configuration for proexe_assignment project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
+from dynamic_tables.views import TableViewSet
+
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+router = routers.DefaultRouter()
+router.register(r'table', TableViewSet, 'table')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
+]
+
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Django Dynamic Tables API",
+        default_version='v1',
+        description="""
+        This projects showcases a basic use of the python type function to generate django models on the fly and, Django Schema Editor to create db tables and migrations on runtime. Was implemented as a recruitment tasks. 
+
+        **Endpoints**
+
+        - [/swagger](/swagger): live testing playground
+        - [/](/): api documentation
+        - [/api](/api): api endpoints
+        """,
+        license=openapi.License(name="BSD License"),
+
+
+    ),
+    public=True,
+)
+
+urlpatterns += [
+    path('swagger<format>/', schema_view.without_ui(cache_timeout=0),
+         name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger',
+                                         cache_timeout=0), name='schema-swagger-ui'),
+    path('', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
